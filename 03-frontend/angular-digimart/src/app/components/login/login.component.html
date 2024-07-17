@@ -1,0 +1,12 @@
+<!-- container to inject the okta-signin-widget -->
+ <div class = "pt-5">
+    <div id = "okta-sign-in-widget" class = "pt-5">
+        
+    </div>
+ </div>
+
+
+
+
+<!-- Actual flow of application (how does login/logout work) :  -->
+   <!-- In order to implement authentication/authorization, we need an authorization server. Okta provides a pre-configured custom authorization server called default. Thus we first sign up on okta and create a free OpenId connect client app named "My Digimart". We note the client id and domain name that okta provides us. Then we set up app config, by creating an my-app-config.ts file in angular app. We are basically linking the creatd okta app with our angular app.Inside this file, we create an oidc json objct having the obtained clientId, issuer url, redirectUri and scopes. This will be used later. Then we install the required okta dependencies. Then finally we create the login component. Inside the login.component.ts file, we first inject oktaService(OKTA_AUTH) prpvided by okta libraries that we have installed.Then we proceed to vreate an oktaSignIn object ans populate its filds from oidc defined in my-app-config.ts file.Thn inside the ngOnInit method, we render the okta-sign-in-widget(defined in login.component.html file) using id. On ce we get a response regarding th sign in, we check if sign in was successful, if yes, we redirect to the redirctUri(http://localhost:4200/login/callback") which in turn redirects us to our home url(http://localhost:4200/products). Finally, e add 2 routes in the routes array- "/login" route hich gets trigerred when login button is pressd and this renders the login component, and "/login/callback" route which is standard route defined by okta and this renders the standard oktaCallbackComponent.In this way, sign in with okta works. -->

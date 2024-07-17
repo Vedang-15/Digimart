@@ -1,0 +1,91 @@
+<div class = "main-content">
+    <div class = "section-content section-content-p30">
+        <div class = "container-fluid">
+            <div class = "row">
+                <!-- loop over collection of products-->
+                <div *ngFor = "let tempProduct of products" class = "col-md-3">
+                    <div class = "product-box">
+
+                        <a routerLink = "/products/{{ tempProduct.id }}">
+                            <img src="{{ tempProduct.imageUrl }}" class="img-responsive">
+                        </a>
+
+                        <a routerLink="/products/{{ tempProduct.id }}">
+                            <h2>{{ tempProduct.name }}</h2>
+                            <hr>
+                        </a>
+                        
+                        <div class = "price">{{ tempProduct.unitPrice | currency : 'USD' }}</div>
+                        <button (click) = "addToCart(tempProduct)" class = "btn btn-primary btn-sm">Add to cart</button>  
+                        <!-- if you ar using a method in product-list-componnt.html, it has to defined in product-list-component.ts file only, ie in ts file of the same component only(hre html file is of product-list component, hence we dfine in product-list-componnt.ts only). -->
+                    </div>
+                </div>
+
+                <!-- if products array is empty, the display th following messaage -->
+                <div *ngIf = "products?.length == 0" class = "alert alert-warning col-md-12" role = "alert">
+                    No products found.
+                </div>
+
+            </div>
+
+            <!-- pagination component area -->
+            <div class = "footer-pagination">
+                <div class = "row">
+                    <div class="col-md-6"></div>
+
+                    <div class = "col-md-6">
+                        <div class = "row">
+
+                            <div class = "col-md-9">
+
+                                <ngb-pagination
+
+                                [(page)] = "thePageNumber"
+                                [pageSize] = "thePageSize" 
+                                [collectionSize] = "theTotalElements" 
+                                [maxSize] = "5"   
+                                [boundaryLinks] = "true"
+                                (pageChange) = "listProducts()">
+
+                                <!-- proprties on LHS are the ngbootstrap pagination proprties, while properties on RHS are the properties the we have defined in prodict-list-component.ts file.
+                                Also, once a different page number is clicked, ie when an attempt to change the page is made, listProducts() method(defined in product-list-component.ts file) is called. -->
+
+                                </ngb-pagination>
+                                <!-- [maxSize] attribute - will show a maximum of 5 pages if there are many pages, will hide thje remaining by putting ... between 5th page and
+                                last page -->
+                                <!-- [boundaryLinks] attribute - allows the user to jump to first/last page directly -->
+                            </div>
+
+                            <div  style="text-align : right;">
+                                <span class="mr-2 pageSizeField">Page Size</span>
+                                <select #myPageSelect (change)="updatePageSize(myPageSelect.value)">
+                                    <option>2</option>
+                                    <option selected="true">5</option>
+                                    <option>10</option>
+                                    <option>20</option>
+                                    <option>50</option>
+                                </select>
+                            </div>
+
+                            
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- Actual Flow of the applications(what happens when we try to search by keyword) :  -->
+    <!-- In order to implment sarch functionality, we create a ne component, search-component.  also create a ne route and add it to nrout array. The path of this route is "search/:keyword", and it renders the creatd search component. Now since searching by keyord s quite similar to finding products by categoryId, as i both cases, we need to mkake call to som rest api methods (defines in ProductRepository in spring boot app ), instead of creating and adding code in search-component.ts file(ie craeting a nw methos, adding for loop that renders the products added to products array etc), we simply reuse the product-list-componnt functionality. Originally, the listProducts() methos has a method : getProductList(). Now, we just break the original listProducts() methods into two methods : handleSearchProducts() and handleListProducts(). We call handleListProducts() if the current operation is finding products by id. Inside this , we call the getProductList() methos that is defined inside the ProductService class.This method makes a call to "${this.baseUrl}/search/findByCategoryId?id=${theCategoryId}" and populates products array.This is then rndered by product-list-componnt.html files for loop. On th other hand, if th current operation is a search operation, we call handleSarchProducts() method, hich makes a call to searchProducts() methos, also defined in ProductService Class. This methos makes a call to "${this.baseUrl}/search/findByNameContaining?name=${theKeyword}", and populates products array with products having the passed keyword as a part of their name(by returning the data to the method that has subscribed to this). Finally, here too, the product-list-componnt.html files for loop renders th products present in product array.
+    So, basically we would have had to write this handleSearchProducts() methos in search-componnt.ts, then once the array would have been populated by searchProducts() method of ProductService class(even if we define handleSearchProducts() in search-componnt.ts, the searchProducts() would still have been defined in ProductService class as that class has been made for defining such methods only).Then we would have had to write a for loop rendering products array elements in search-component.html file. Instaed of all that, since functionality is same as fnding by categoryId, we simply reused the existing product-list-component.ts and product-list-component.html files by creating two sepertae methods(handleSearchProducts() and handleListProducts() inside the product-list-component.td file itself). -->
+
+
+
+
+
+<!-- Actual Flow of application(How does Pagination work?) :  -->
+    <!-- We use the module provided by bootstrap, called ng-bootstrap. I has various functionalities for angular app, pagination being one of them . In the product-list-component.html, file, we use the <ngb-pagination></ngb-pagination> tag, and map the quantities : page, pageSizeand collectionSize(these are standard propertis provided by ng-bootstrap) to thePageNumber, thePageSize, and theTotalElements, which are defined in product-list-component.ts file.User is given a choice to slect page size through drtopdown. Default value is 5. If he does not select any page size, thePageSize is assigned value of 5. Once the user clicks a page number in pagination bar. thePageNumber filed of product-list-component.ts gets set to this clicked value and listProducts() methos gets called. Inside listProducts() methos(defined in product-list-component.ts file), we pass the current thePageNumber(set while clicking the page number button), thePageSize(default value 5), and categoryId(depending on which catgory we are in) to the getProductListPaginate() methos. This method builds a url based on these passed values and in return the products array gets populated with product objects corresponding to the pageNumber and pageSize that we passd. We then simply iterate ovr this populated products array in product-list-component.html file and render th products. In case the user selects a different page size, a methos updatePageSize() is called the moment he selects a page size from dropdown(note that whatever he selected as page number now becomes irrelavent as fo every new page size selected, we want to send page 1. So inbside updatePagesize() method, thePageSize is assigned the selected value, thePageNumber is assigned value 1 and now here listProducts() is called. This listProducts() considers the modified thePageSize and thePageNumber values, and renders teh data accordingly.)-->
