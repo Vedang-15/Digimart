@@ -459,14 +459,6 @@ export class CheckoutComponent implements OnInit {
 
 
 
-/*
-We did 4 main things related to Stripe and order placing here(all 4 were done in this file only, a small part(createPaymentIntent function) was written in checkoutService) : 
-1. We mounted/inserted the stripe element in our checkout-component.html file(this replaced our created credit card section from the checkout form)
-2. We made a REST api call to backend by passing a paymentInfo object(we did this by calling the createPaymentIntent function using in checkoutService ). This call pass the PaymntInfo object to backend amnd the backnd created a PaymentIntent using the passed info
-3. We directly transferred th credit card details of the users to stripe servers (using this.stripe.confirmCardPayment(paymentIntentResponse.client_secret,.....)
-4. We made a REST api call to backend for saving the purchase order in the database(happened by calling this.checkoutService.placeOrder(purchase).subscribe...)
-*/
-
 
 
 

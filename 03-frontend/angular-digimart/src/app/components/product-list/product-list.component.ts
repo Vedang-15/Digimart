@@ -92,7 +92,7 @@ export class ProductListComponent implements OnInit {
 
 
     // check if we have a different catgory id than previous
-    // Note : Angular will reuse a component if it is currently being viewed, so if we are viewing a different catgory id that previous and angular is reusing the same component that it used for previous id, even for new category id, it ill rnder the page no. that it rendered for previous id. We dont ant that. If it is a new id, we want to show its first page to user. It will look bad if user clicks on mouse pads, and directly say, page 3 appears(it might happen if angular decides to reuse the same component that it used for last category id, say luggage tag, and we were on page 3 of luggage tags before we clicked mouse pads. So, even though category has changed, since angular is reusing the same component, it will retain the page no. as 3, and show third page even for mouse pads). We dont want this. We want first pag to come up everytime a new category is chosen.To ensure this, we are riting the folloing code.
+    
 
     if(this.previousCategoryId != this.currentCategoryId) {
       this.thePageNumber = 1;

@@ -31,7 +31,7 @@ export class OrderHistoryComponent implements OnInit {
         
         this.orderHistoryList = data._embedded.orders; 
         console.log("List");
-        console.log(this.orderHistoryList);  // here we are assigning the data returned by orderHistoryService to our orderHistoryList.orderHistoryService itself got the data from spring boot api. The service then mapped the JSON data(that it received from spring boot api) to an OrderHistory array(this happened inside the defined interface), and sent the mapped data to this order-history-component.ts file(when we made a call to service). Once we receivd the mapped data(ie the data mapped to a OrderHistory array), we simply assigned it to orderHistoryList defined here.
+        console.log(this.orderHistoryList);  
       }
     );
   }

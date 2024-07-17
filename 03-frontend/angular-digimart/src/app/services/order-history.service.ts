@@ -33,22 +33,3 @@ interface GetResponseOrderHistory {
 
 
 
-/*
-Q...
-While populating productCategories, we made a call to spring boot backend in product-service, and we wrote the following return statement :
-return this.httpClient.get<GetResponseProductCategory>(this.categoryUrl).pipe(map(response => response._embedded.productCategory));
-
-But during populating the OrderHistory array by making api call to backend, e are riting the following rturn statement:
-return this.httpClient.get<GetResponseOrderHistory>(orderHistoryUrl);
-
-Why have we omitted the.pipe() part that we have been using earlier?
-
-
-
-Ans...
-If the API response(ie the response from spring boot backend api) already has the desired structure and no transformation is needed, you can return the Observable directly without using.pipe(map(...)).
-
-• Use.pipe(map(...)) when you need to transform or extract data from the API response.
-• Omit.pipe(map(...)) when the API response is already in the desired format.
-
-*/
